@@ -40,7 +40,7 @@ app.get('/search', async (req: Request, res: Response) => {
       if (
         err ||
         (response.statusCode &&
-          (response.statusCode >= 200 || response.statusCode <= 300))
+          (response.statusCode <= 200 || response.statusCode >= 300))
       ) {
         console.error('there was an error hitting the search Api', err, response.statusCode)
       }
@@ -63,7 +63,7 @@ app.get('/users/:id/:screen_name', async (req: Request, res: Response) => {
       if (
         err ||
         (response.statusCode &&
-          (response.statusCode >= 200 || response.statusCode <= 300))
+          (response.statusCode <= 200 || response.statusCode >= 300))
       ) {
         console.error('there was an error hitting the user Api', err,response.statusCode )
       }
@@ -75,7 +75,7 @@ app.get('/users/:id/:screen_name', async (req: Request, res: Response) => {
         if (
           err ||
           (response.statusCode &&
-            (response.statusCode >= 200 || response.statusCode <= 300))
+            (response.statusCode <= 200 || response.statusCode >= 300))
         ) {
           console.error('there was an error hitting the tweet Api', err, response.statusCode)
         }
