@@ -6,7 +6,7 @@ require('dotenv').config();
 
 // types
 import { Request, Response, NextFunction } from 'express'
-import { User as TwitterUser } from 'twitter-d'
+import { User as TwitterUser, Status as Tweet } from 'twitter-d'
 import { IncomingMessage } from 'http'
 
 const T = new Twit({
@@ -42,7 +42,7 @@ app.get('/search', async (req: Request, res: Response) => {
         (response.statusCode &&
           (response.statusCode >= 200 || response.statusCode <= 300))
       ) {
-        console.error('there was an error hitting the twitter Api')
+        console.error('there was an error hitting the search Api', err, response.statusCode)
       }
 
       res.send(data)
@@ -51,6 +51,7 @@ app.get('/search', async (req: Request, res: Response) => {
 })
 
 type ourParams = { user_id: string; screen_name: string }
+type completeTwitUser = TwitterUser & {tweets: Tweet[]}
 
 app.get('/users/:id/:screen_name', async (req: Request, res: Response) => {
   const { user_id, screen_name }: ourParams = req.params as ourParams
@@ -58,16 +59,36 @@ app.get('/users/:id/:screen_name', async (req: Request, res: Response) => {
   T.get(
     'users/show',
     { id: user_id, screen_name },
-    (err: Error, data:TwitterUser, response: IncomingMessage) => {
+    (err: Error, userdata: TwitterUser, response: IncomingMessage) => {
       if (
         err ||
         (response.statusCode &&
           (response.statusCode >= 200 || response.statusCode <= 300))
       ) {
-        console.error('there was an error hitting the twitter Api')
+        console.error('there was an error hitting the user Api', err,response.statusCode )
+      }
+
+    T.get(
+      'statuses/user_timeline',
+      {id: user_id, screen_name, count: 5},
+      (err:Error, tweetdata: Tweet[], response: IncomingMessage) => {
+        if (
+          err ||
+          (response.statusCode &&
+            (response.statusCode >= 200 || response.statusCode <= 300))
+        ) {
+          console.error('there was an error hitting the tweet Api', err, response.statusCode)
+        }
+
+
+      const data: completeTwitUser = {
+        ...userdata,
+        tweets: tweetdata
       }
 
       res.send(data)
+
+      })      
     },
   )
 })
