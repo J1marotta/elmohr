@@ -8,10 +8,11 @@
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "prettier"
+    "prettier",
+    "plugin:node/recommended"
   ],
   "rules": {
-    "no-console": 1,
-    "prettier/prettier": 2
+    "prettier/prettier": 2,
+    "semi":"off"
   }
 }
