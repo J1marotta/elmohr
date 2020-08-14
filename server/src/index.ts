@@ -30,14 +30,13 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-app.get('/', async (req: Request, res: Response) => {
-  res.send('hello');
-});
 
 app.get('/search', async (req: Request, res: Response) => {
+  const query = req.query.q as string 
+  
   T.get(
     'users/search',
-    { q: req.query.q },
+    { q: query },
     (err: Error, data: TwitterUser[], response: IncomingMessage) => {
       if (
         err ||
@@ -51,6 +50,33 @@ app.get('/search', async (req: Request, res: Response) => {
     },
   );
 });
+
+
+type ourParams = { user_id: string, screen_name: string} 
+
+app.get('/users/:id/:screen_name', async (req: Request, res: Response) => {
+  const {user_id, screen_name}: ourParams = req.params as ourParams
+   
+  
+  T.get(
+    'users/show',
+    { id: user_id, screen_name },
+    (err: Error, data: TwitterUser, response: IncomingMessage) => {
+      if (
+        err ||
+        (response.statusCode &&
+          (response.statusCode >= 200 || response.statusCode <= 300))
+      ) {
+        console.error('there was an error hitting the twitter Api');
+      }
+
+      res.send(data);
+    },
+  );
+});
+
+
+
 
 app.listen(4000);
 console.log(
