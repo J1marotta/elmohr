@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { selectSearchQuery, SetQuery, ClearQuery } from "../search/searchSlice";
+import { fetchData } from "../Meta/FetchData";
 
 export const Search: React.FC = () => {
   const query = useSelector(selectSearchQuery);
@@ -11,6 +12,7 @@ export const Search: React.FC = () => {
       <form
         onSubmit={(e: React.SyntheticEvent) => {
           e.preventDefault();
+          fetchData();
           console.log(query);
         }}
       >

@@ -3,14 +3,14 @@ import { RootState } from "../../app/store";
 
 interface MetaState {
   status: string;
-  error: Error | null;
-  data: unknown[];
+  error: string | null;
+  users: any[];
 }
 
 const initialState: MetaState = {
   status: "idle",
   error: null,
-  data: [],
+  users: [],
 };
 
 export const metaSlice = createSlice({
@@ -21,7 +21,7 @@ export const metaSlice = createSlice({
       ...state,
       status: "loading",
     }),
-    SetError: (state, action: PayloadAction<Error>) => ({
+    SetError: (state, action: PayloadAction<string>) => ({
       ...state,
       status: "error",
       error: action.payload,
@@ -30,17 +30,17 @@ export const metaSlice = createSlice({
       ...state,
       status: "ready",
     }),
-    SetData: (state, action: PayloadAction<unknown>) => ({
+    SetUsers: (state, action: PayloadAction<any>) => ({
       ...state,
-      data: [action.payload],
+      users: action.payload,
     }),
   },
 });
 
-export const { SetLoading, SetError, SetReady, SetData } = metaSlice.actions;
+export const { SetLoading, SetError, SetReady, SetUsers } = metaSlice.actions;
 
 export const getStatus = (state: RootState) => state.meta.status;
 export const getError = (state: RootState) => state.meta.error;
-export const getData = (state: RootState) => state.meta.data;
+export const getUsers = (state: RootState) => state.meta.users;
 
 export default metaSlice.reducer;
