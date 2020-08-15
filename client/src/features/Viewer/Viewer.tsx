@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import styles from './Viewer.module.css'
 import { getUsers, getStatus } from '../Meta/MetaSlice'
 import { useSelector } from 'react-redux'
 
-export const Viewer = ({}) => {
+export const Viewer = (): ReactElement => {
     const status = useSelector(getStatus)
     const userData = useSelector(getUsers)
 

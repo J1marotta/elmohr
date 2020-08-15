@@ -30,7 +30,7 @@ export const Search: React.FC = () => {
                 />
                 <button type="submit"> Search! </button>
                 <button type="button" onClick={() => dispatch(ClearQuery())}>
-          Clear
+                    Clear
                 </button>
             </form>
         </div>

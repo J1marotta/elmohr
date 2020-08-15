@@ -1,11 +1,10 @@
-import React from 'react'
 import axios from 'axios'
 
 import { SetUsers, SetError, SetLoading, SetReady } from './MetaSlice'
 
 import { store } from '../../app/store'
 
-export const fetchData = async () => {
+export const fetchData = async (): Promise<void> => {
     const { dispatch } = store
 
     dispatch(SetLoading())
@@ -16,7 +15,6 @@ export const fetchData = async () => {
     const searchUrl = `${baseUrl}/search?q=${query}`
     // const usersUrl = `${baseUrl}/users/${userId}/${ScreenName}`
     const url = searchUrl
-    console.log({ url })
 
     try {
         if (query.length > 2) {

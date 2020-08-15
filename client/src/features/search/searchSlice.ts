@@ -6,26 +6,25 @@ interface QueryState {
 }
 
 const initialState: QueryState = {
-    query: '',
+  query: '',
 }
 
 export const searchSlice = createSlice({
-    name: 'searchQuery',
-    initialState,
-    reducers: {
-        SetQuery: (state, action: PayloadAction<string>) => {
-            state.query = action.payload
-        },
-        ClearQuery: (state) =>
-            (console.log('clicked') as any) || {
-                ...state,
-                query: '',
-            },
+  name: 'searchQuery',
+  initialState,
+  reducers: {
+    SetQuery: (state, action: PayloadAction<string>) => {
+      state.query = action.payload
     },
+    ClearQuery: (state) => ({
+      ...state,
+      query: '',
+    }),
+  },
 })
 
 export const { SetQuery, ClearQuery } = searchSlice.actions
 
-export const selectSearchQuery = (state: RootState) => state.search.query
+export const selectSearchQuery = (state: RootState): string => state.search.query
 
 export default searchSlice.reducer
