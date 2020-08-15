@@ -1,9 +1,10 @@
-import React from "react";
+import React, { ReactElement } from "react";
 
 import "./App.css";
 import { Search } from "./features/search/Search";
 import { Viewer } from "./features/Viewer/Viewer";
-function App() {
+
+function App(): ReactElement {
   return (
     <div className="App">
       <header className="App-header">Elmo HR Twitter Api</header>

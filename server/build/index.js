@@ -52,6 +52,7 @@ var cors = require('cors');
 var bodyParser = require('body-parser');
 var Twit = require('twit');
 require('dotenv').config();
+var logger = require('simple-express-logger');
 var T = new Twit({
     consumer_key: process.env.API_KEY,
     consumer_secret: process.env.API_SECRET_KEY,
@@ -60,6 +61,7 @@ var T = new Twit({
 });
 var app = express();
 app.use(cors());
+app.use(logger());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 // Send a 500 otherwise keep going
