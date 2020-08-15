@@ -5,20 +5,32 @@ import { selectSearchQuery, SetQuery, ClearQuery } from "../search/searchSlice";
 export const Search: React.FC = () => {
   const query = useSelector(selectSearchQuery);
   const dispatch = useDispatch();
+
   return (
     <div>
-      <label htmlFor="input" />
-      <input
-        id="input"
-        autoFocus
-        placeholder="Search for..."
-        value={query}
-        onChange={({
-          target: { value },
-        }: React.ChangeEvent<HTMLInputElement>): void => {
-          dispatch(SetQuery(value));
+      <form
+        onSubmit={(e: React.SyntheticEvent) => {
+          e.preventDefault();
+          console.log(query);
         }}
-      ></input>
+      >
+        <label htmlFor="input">Search Twitter </label>
+        <input
+          id="input"
+          autoFocus
+          placeholder="Search for..."
+          value={query}
+          onChange={({
+            target: { value },
+          }: React.ChangeEvent<HTMLInputElement>): void => {
+            dispatch(SetQuery(value));
+          }}
+        />
+        <button type="submit"> Search! </button>
+        <button type="button" onClick={() => dispatch(ClearQuery())}>
+          Clear
+        </button>
+      </form>
     </div>
   );
 };
