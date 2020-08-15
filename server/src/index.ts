@@ -1,9 +1,9 @@
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const Twit = require('twit');
-require('dotenv').config();
-
+const express = require('express')
+const cors = require('cors')
+const bodyParser = require('body-parser')
+const Twit = require('twit')
+require('dotenv').config()
+const logger = require('simple-express-logger')
 // types
 import { Request, Response, NextFunction } from 'express'
 import { User as TwitterUser, Status as Tweet } from 'twitter-d'
@@ -18,6 +18,7 @@ const T = new Twit({
 
 const app = express()
 app.use(cors())
+app.use(logger())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
@@ -31,18 +32,22 @@ app.use((_req: Request, res: Response, next: NextFunction) => {
 })
 
 app.get('/search', async (req: Request, res: Response) => {
-  const query = req.query.q as string 
-  
+  const query = req.query.q as string
+
   T.get(
     'users/search',
     { q: query },
-    (err: Error, data:TwitterUser[], response: IncomingMessage) => {
+    (err: Error, data: TwitterUser[], response: IncomingMessage) => {
       if (
         err ||
         (response.statusCode &&
           (response.statusCode <= 200 || response.statusCode >= 300))
       ) {
-        console.error('there was an error hitting the search Api', err, response.statusCode)
+        console.error(
+          'there was an error hitting the search Api',
+          err,
+          response.statusCode,
+        )
       }
 
       res.send(data)
@@ -51,11 +56,11 @@ app.get('/search', async (req: Request, res: Response) => {
 })
 
 type ourParams = { user_id: string; screen_name: string }
-type completeTwitUser = TwitterUser & {tweets: Tweet[]}
+type completeTwitUser = TwitterUser & { tweets: Tweet[] }
 
 app.get('/users/:id/:screen_name', async (req: Request, res: Response) => {
   const { user_id, screen_name }: ourParams = req.params as ourParams
-   
+
   T.get(
     'users/show',
     { id: user_id, screen_name },
@@ -65,30 +70,37 @@ app.get('/users/:id/:screen_name', async (req: Request, res: Response) => {
         (response.statusCode &&
           (response.statusCode <= 200 || response.statusCode >= 300))
       ) {
-        console.error('there was an error hitting the user Api', err,response.statusCode )
+        console.error(
+          'there was an error hitting the user Api',
+          err,
+          response.statusCode,
+        )
       }
 
-    T.get(
-      'statuses/user_timeline',
-      {id: user_id, screen_name, count: 5},
-      (err:Error, tweetdata: Tweet[], response: IncomingMessage) => {
-        if (
-          err ||
-          (response.statusCode &&
-            (response.statusCode <= 200 || response.statusCode >= 300))
-        ) {
-          console.error('there was an error hitting the tweet Api', err, response.statusCode)
-        }
+      T.get(
+        'statuses/user_timeline',
+        { id: user_id, screen_name, count: 5 },
+        (err: Error, tweetdata: Tweet[], response: IncomingMessage) => {
+          if (
+            err ||
+            (response.statusCode &&
+              (response.statusCode <= 200 || response.statusCode >= 300))
+          ) {
+            console.error(
+              'there was an error hitting the tweet Api',
+              err,
+              response.statusCode,
+            )
+          }
 
+          const data: completeTwitUser = {
+            ...userdata,
+            tweets: tweetdata,
+          }
 
-      const data: completeTwitUser = {
-        ...userdata,
-        tweets: tweetdata
-      }
-
-      res.send(data)
-
-      })      
+          res.send(data)
+        },
+      )
     },
   )
 })
